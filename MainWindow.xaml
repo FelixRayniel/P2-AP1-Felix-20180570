@@ -5,12 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:P2_AP1_Felix_20180570"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Menu Principal" Height="450" Width="800">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="77*"/>
-            <ColumnDefinition Width="723*"/>
-        </Grid.ColumnDefinitions>
-
+        <StackPanel>
+            <Menu Height="18">
+                <MenuItem Header="Registros">
+                    <MenuItem x:Name="RegistroTareasMenuItem" Header="Registro de Proyectos" Click="RegistroTareasMenuItem_Click"/>
+                </MenuItem>
+                <MenuItem Header="Consultas">
+                    <MenuItem x:Name="ConsultaProyectosMenuItem" Header="Consulta de Proyectos" Click="ConsultaProyectosMenuItem_Click"/>
+                    <MenuItem x:Name="ConsultaTiposTareasMenuItem" Header="Consulta Tipos Tareas" Click="ConsultaTiposTareasMenuItem_Click"/>
+                </MenuItem>
+            </Menu>
+        </StackPanel>
     </Grid>
 </Window>

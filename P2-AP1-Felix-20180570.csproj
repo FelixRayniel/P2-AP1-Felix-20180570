@@ -8,13 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="BLL\" />
-    <Folder Include="DAL\" />
+    <None Remove="Resources\icons8-eliminar-16.png" />
+    <None Remove="Resources\icons8-google-web-search-24.png" />
+    <None Remove="Resources\icons8-guardar-48.png" />
+    <None Remove="Resources\icons8-nuevo-48.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="DATA\" />
-    <Folder Include="Entidades\" />
-    <Folder Include="Resources\" />
-    <Folder Include="UI\Consultas\" />
-    <Folder Include="UI\Registros\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +24,19 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\icons8-eliminar-16.png" />
+    <Resource Include="Resources\icons8-google-web-search-24.png" />
+    <Resource Include="Resources\icons8-guardar-48.png" />
+    <Resource Include="Resources\icons8-nuevo-48.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DATA\BDProyectos.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
