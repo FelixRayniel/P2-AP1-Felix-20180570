@@ -49,18 +49,21 @@ namespace P2_AP1_Felix_20180570.BLL
         {
             bool paso = false;
             Contexto contexto = new Contexto();
-            
+
             try
             {
-                var ProyectoAnterior = contexto.Proyectos.Where(x => x.ProyectoID == proyectos.ProyectoID).
-                    Include(x => x.DetalleTarea).ThenInclude(x => x.TipoTareas).AsNoTracking().SingleOrDefault();
-                   
+                var ProyectoAnterior = contexto.Proyectos
+                    .Where(x => x.ProyectoID == proyectos.ProyectoID)
+                    .Include(x => x.DetalleTarea).ThenInclude(x => x.TipoTareas)
+                    .AsNoTracking()
+                    .SingleOrDefault();
 
-                contexto.Database.ExecuteSqlRaw($"Delete FROM GruposDetalle Where ID={proyectos.ProyectoID}");
+                contexto.Database.ExecuteSqlRaw($"Delete FROM TareasDetalle Where ID={proyectos.ProyectoID}");
 
-                foreach(var detalle in ProyectoAnterior.DetalleTarea)
+                foreach (var detalle in ProyectoAnterior.DetalleTarea)
                 {
                     contexto.Entry(detalle.TipoTareas).State = EntityState.Modified;
+
                 }
 
                 contexto.Entry(proyectos).State = EntityState.Modified;
