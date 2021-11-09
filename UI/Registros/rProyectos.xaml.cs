@@ -77,7 +77,12 @@ namespace P2_AP1_Felix_20180570.UI.Registros
 
         private void RemoverFilaButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if (DetalleDataGrid.Items.Count >= 1 && 
+                DetalleDataGrid.SelectedIndex <= DetalleDataGrid.Items.Count - 1)
+            {
+                proyecto.DetalleTarea.RemoveAt(DetalleDataGrid.SelectedIndex);
+                Cargar();
+            }
         }
 
         private void NuevoButton_Click(object sender, RoutedEventArgs e)
