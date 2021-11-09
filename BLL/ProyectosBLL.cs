@@ -10,29 +10,29 @@ using System.Threading.Tasks;
 
 namespace P2_AP1_Felix_20180570.BLL
 {
-   public class TiposTareasBLL
+    public class ProyectosBLL
     {
-        public static bool Guardar(TiposTareas Ttareas)
+        public static bool Guardar(Proyectos proyectos)
         {
-            if (!Existe(Ttareas.TipoTareaID))
-            {
-                return Insertar(Ttareas);
-            }
+            if (!Existe(proyectos.ProyectoID))
+                return Insertar(proyectos);
             else
-            {
-                return Modificar(Ttareas);
-            }
-                
+                return Modificar(proyectos);
         }
-        private static bool Insertar(TiposTareas Ttareas)
+        private static bool Insertar(Proyectos proyectos)
         {
             bool paso = false;
             Contexto contexto = new Contexto();
 
             try
             {
-               
-                contexto.TiposTareas.Add(Ttareas);
+                contexto.Proyectos.Add(proyectos);
+
+                foreach (var detalle in proyectos.DetalleTarea)
+                {
+                    contexto.Entry(detalle.TipoTareas).State = EntityState.Modified;
+                }
+
                 paso = contexto.SaveChanges() > 0;
             }
             catch (Exception)
@@ -45,15 +45,25 @@ namespace P2_AP1_Felix_20180570.BLL
             }
             return paso;
         }
-        private static bool Modificar(TiposTareas Ttareas)
+        private static bool Modificar(Proyectos proyectos)
         {
             bool paso = false;
             Contexto contexto = new Contexto();
-
+            
             try
             {
-                contexto.Database.ExecuteSqlRaw($"Delete FROM GruposDetalle Where TipoTareaID={Ttareas.TipoTareaID}");
-                contexto.Entry(Ttareas).State = EntityState.Modified;
+                var ProyectoAnterior = contexto.Proyectos.Where(x => x.ProyectoID == proyectos.ProyectoID).
+                    Include(x => x.DetalleTarea).ThenInclude(x => x.TipoTareas).AsNoTracking().SingleOrDefault();
+                   
+
+                contexto.Database.ExecuteSqlRaw($"Delete FROM GruposDetalle Where ID={proyectos.ProyectoID}");
+
+                foreach(var detalle in ProyectoAnterior.DetalleTarea)
+                {
+                    contexto.Entry(detalle.TipoTareas).State = EntityState.Modified;
+                }
+
+                contexto.Entry(proyectos).State = EntityState.Modified;
                 paso = contexto.SaveChanges() > 0;
             }
             catch (Exception)
@@ -73,11 +83,11 @@ namespace P2_AP1_Felix_20180570.BLL
 
             try
             {
-                var tipotarea = TiposTareasBLL.Buscar(id);
+                var proyecto = ProyectosBLL.Buscar(id);
 
-                if (tipotarea != null)
+                if (proyecto != null)
                 {
-                    contexto.TiposTareas.Remove(tipotarea);
+                    contexto.Proyectos.Remove(proyecto); 
                     paso = contexto.SaveChanges() > 0;
                 }
 
@@ -92,15 +102,15 @@ namespace P2_AP1_Felix_20180570.BLL
             }
             return paso;
         }
-        public static TiposTareas Buscar(int id)
+        public static Proyectos Buscar(int id)
         {
-            TiposTareas Ttarea = new TiposTareas();
+            Proyectos proyecto = new Proyectos();
             Contexto contexto = new Contexto();
 
             try
             {
-                Ttarea = contexto.TiposTareas.Include(x => x.TipoTareaID)
-                    .Where(x => x.TipoTareaID == id)
+                    proyecto = contexto.Proyectos.Include(x => x.DetalleTarea)
+                    .Where(x => x.ProyectoID == id).Include(x => x.DetalleTarea).ThenInclude(x => x.TipoTareas)
                     .SingleOrDefault();
             }
             catch (Exception)
@@ -111,16 +121,18 @@ namespace P2_AP1_Felix_20180570.BLL
             {
                 contexto.Dispose();
             }
-            return Ttarea;
+            return proyecto;
         }
-        public static List<TiposTareas> GetList(Expression<Func<TiposTareas, bool>> criterio)
+        public static List<Proyectos> GetList(Expression<Func<Proyectos, bool>> criterio)
         {
-            List<TiposTareas> Lista = new List<TiposTareas>();
+            List<Proyectos> Lista = new List<Proyectos>();
+
             Contexto contexto = new Contexto();
 
             try
             {
-                Lista = contexto.TiposTareas.Where(criterio).ToList();
+                //obtener la lista y filtrarla según el criterio recibido por parametro.
+                Lista = contexto.Proyectos.Where(criterio).ToList();
             }
             catch (Exception)
             {
@@ -139,7 +151,7 @@ namespace P2_AP1_Felix_20180570.BLL
 
             try
             {
-                encontrado = contexto.TiposTareas.Any(e => e.TipoTareaID == id);
+                encontrado = contexto.Proyectos.Any(e => e.ProyectoID == id);
             }
             catch (Exception)
             {
@@ -153,25 +165,6 @@ namespace P2_AP1_Felix_20180570.BLL
             return encontrado;
         }
 
-        public static List<TiposTareas> GetTipoTarea()
-        {
-            List<TiposTareas> Lista = new List<TiposTareas>();
-            Contexto contexto = new Contexto();
-            try
-            {
-                Lista = contexto.TiposTareas.ToList();
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                contexto.Dispose();
-            }
-
-            return Lista;
-        }
+        
     }
 }
