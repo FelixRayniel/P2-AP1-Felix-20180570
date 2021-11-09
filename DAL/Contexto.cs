@@ -12,6 +12,7 @@ namespace P2_AP1_Felix_20180570.DAL
     {
 
         public DbSet<TiposTareas> TiposTareas { get; set; }
+        public DbSet<Proyectos> Proyectos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
